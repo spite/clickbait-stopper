@@ -51,6 +51,8 @@ function test( string ) {
 
 function parseNode( element ) {
 
+	if( !element ) return;
+
 	var iter = document.createNodeIterator ( element, NodeFilter.SHOW_TEXT );
 
 	while (textnode = iter.nextNode()) {
@@ -67,3 +69,13 @@ function parseNode( element ) {
 }
 
 parseNode( document.body );
+
+var observer = new MutationObserver( function( mutations ) {
+
+	mutations.forEach( function( mutation ) {
+		parseNode( mutation.target.parentNode );
+	} )
+
+});
+
+observer.observe( document, { childList: true, subtree: true, characterData: true });
